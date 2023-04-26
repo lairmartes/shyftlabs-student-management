@@ -1,7 +1,12 @@
 import { useState } from "react";
-import { SERVICE_KEY_STUDENTS_ADD, useSubmitForm } from "../../service/api-access";
+import { SERVICE_KEY_STUDENTS_ADD, useSubmitForm } from "../../service/useAPI";
 
 const StudentForm = () => {
+
+
+    const formElement = useRef(null);
+
+    const {handleSubmit, responseStatus, message } = useSubmitForm(SERVICE_KEY_STUDENTS_ADD, formElement);
 
     const [inputs, setInputs] = useState({});    
 
@@ -12,15 +17,8 @@ const StudentForm = () => {
         setInputs(values => ({...values, [name]: value}));
     }
 
-    const handleSubmit = async (event) => {
-
-        event.preventDefault();
-
-        [responseStatus, responseMessage] = useSubmitForm(SERVICE_KEY_STUDENTS_ADD, inputs);
-    }
-
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} ref={formElement}>
             <div>
                 <label>First Name</label>
             </div>
