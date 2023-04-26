@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SERVICE_KEY_STUDENTS_ADD, useSubmitForm } from "../../service/api-access";
 
 const StudentForm = () => {
 
@@ -12,35 +13,10 @@ const StudentForm = () => {
     }
 
     const handleSubmit = async (event) => {
+
         event.preventDefault();
 
-        try {
-            let res = await fetch("http://localhost:8080/api/students/", {
-                
-                method: "POST",
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8'
-                },
-                body: JSON.stringify({
-                    firstName: inputs.firstName,
-                    familyName: inputs.familyName,
-                    birthDate: inputs.birthDate,
-                    email: inputs.email,
-                }),
-            });
-
-            let resJson = await res.json();
-
-            if (res.status === 200) {
-                alert("Student included.");
-                setInputs({});
-            } else {
-                alert("User Error: " + res);
-            }
-        } catch (err) {
-            alert("System error: " + err)
-            console.log(err);
-        }
+        [responseStatus, responseMessage] = useSubmitForm(SERVICE_KEY_STUDENTS_ADD, inputs);
     }
 
     return (
