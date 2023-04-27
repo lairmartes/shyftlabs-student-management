@@ -3,14 +3,14 @@ import { fetchAllData, SERVICE_KEY_STUDENTS_LIST } from "../../service/useAPI";
 
 import StudentLine from "./StudentLine";
 
-
-
 const StudentList = () => {
 
     const [students, setStudents] = useState([]);
 
+    const refreshList = () => fetchAllData({serviceKey: SERVICE_KEY_STUDENTS_LIST, setList: setStudents});
+
     useEffect(() => {
-        fetchAllData({serviceKey: SERVICE_KEY_STUDENTS_LIST, setList: setStudents})
+        refreshList();
     }, [])
 
     return (
@@ -26,7 +26,7 @@ const StudentList = () => {
                 </thead>
                 <tbody>
                     {students.length > 0 && (
-                            <>{students.map(student => <StudentLine key = {student.id} student={ student } />)}</>
+                            <>{students.map(student => <StudentLine key = {student.id} student={ student } refreshList = {refreshList} />)}</>
                     )}
                 </tbody>
             </table>
