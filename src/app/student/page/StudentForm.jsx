@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { SERVICE_KEY_STUDENTS_ADD, useSubmitForm } from "../../service/useAPI";
 
 const StudentForm = () => {
 
+    const [inputs, setInputs] = useState({});   
 
     const formElement = useRef(null);
 
-    const {handleSubmit, responseStatus, message } = useSubmitForm(SERVICE_KEY_STUDENTS_ADD, formElement);
+    const { handleSubmit, responseStatus, message } = useSubmitForm({serviceKey:SERVICE_KEY_STUDENTS_ADD, form: formElement.current, setFormData: setInputs});
 
-    const [inputs, setInputs] = useState({});    
+    if (responseStatus === "success") {
+        //alert("vai se fuder");
+        setInputs({});
+    }
 
     const handleChange = (event) => {
         const name = event.target.name;
