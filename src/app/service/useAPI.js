@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 const SERVICE_KEY_STUDENTS_ADD = 'SERVICE_STUDENTS_ADD';
 const SERVICE_KEY_STUDENTS_LIST = 'SERVICE_STUDENTS_LIST';
 
@@ -31,28 +29,27 @@ const useSubmitForm = ({ serviceKey, form, setFormData }) => {
                 },
                 body: JSON.stringify(data),
             })
-                .then((response) => {
+            .then((response) => {
 
-                    if (response.status === 400) {
+                if (response.status === 400) {
 
-                        response.text()
-                            .then((text) => {
-                                const alertMessage = text.split(",").map(t => "-" + t.split(":").pop()).join('\n');
+                    response.text()
+                        .then((text) => {
+                            const alertMessage = text.split(",").map(t => "-" + t.split(":").pop()).join('\n');
 
-                                alert("User Error(s) : \n\n" + alertMessage);
-                            });
+                            alert("User Error(s) : \n\n" + alertMessage);
+                        });
+                } else if (response.status === 200) {
 
-                    } else if (response.status === 200) {
+                    alert(serviceData.successMessage);
 
-                        alert(serviceData.successMessage);
-
-                        setFormData({});
-                    } else {
-                        throw new Error(response.statusText);
-                    }
-                }).catch((err) => {
-                    alert("System Error: " + err.toString);
-                });
+                    setFormData({});
+                } else {
+                    alert("System Error: " + response.status + " - " + response.err);}
+            })
+            .catch((err) => {
+                    alert("System Error: " + err)
+            });
         }
     }
 
