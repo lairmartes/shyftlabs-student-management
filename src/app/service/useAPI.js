@@ -1,11 +1,13 @@
 const SERVICE_KEY_STUDENTS_ADD = 'SERVICE_STUDENTS_ADD';
 const SERVICE_KEY_STUDENTS_LIST = 'SERVICE_STUDENTS_LIST';
+const SERVICE_KEY_STUDENTS_DELETE = 'SERVICE_STUDENTS_DELETE';
 
 const api_port = 8080;
 const api_url = 'http://localhost';
 const api_access_data = [
     { key: SERVICE_KEY_STUDENTS_ADD, path: '/api/students/', successMessage: 'Student Included Successfully' },
-    { key: SERVICE_KEY_STUDENTS_LIST, path: '/api/students/all' }
+    { key: SERVICE_KEY_STUDENTS_LIST, path: '/api/students/all' },
+    { key: SERVICE_KEY_STUDENTS_DELETE, path: '/api/students/'}
 ]
 
 const useSubmitForm = ({ serviceKey, form, setFormData }) => {
@@ -71,7 +73,7 @@ const fetchAllData = ({serviceKey, setList}) => {
 const removeRecord = ({serviceKey, id}) => {
     const {uri} = getConnectionData(serviceKey);
 
-    fetch(uri + '/' + id, { method: 'DELETE'});
+    fetch(uri + id, { method: 'DELETE'}).catch(error => alert("System Error : " + error));
 }
 
 function getConnectionData(serviceKey) {
@@ -90,4 +92,4 @@ function getConnectionData(serviceKey) {
 }
 
 
-export { SERVICE_KEY_STUDENTS_ADD, SERVICE_KEY_STUDENTS_LIST, useSubmitForm, fetchAllData, removeRecord }
+export { SERVICE_KEY_STUDENTS_ADD, SERVICE_KEY_STUDENTS_LIST, SERVICE_KEY_STUDENTS_DELETE, useSubmitForm, fetchAllData, removeRecord }

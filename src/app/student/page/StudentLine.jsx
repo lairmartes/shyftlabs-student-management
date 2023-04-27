@@ -1,3 +1,5 @@
+import { removeRecord, SERVICE_KEY_STUDENTS_DELETE } from "../../service/useAPI";
+
 const StudentLine = (props) =>{
 
     const student = props.student;
@@ -10,7 +12,9 @@ const StudentLine = (props) =>{
             <td> {student.firstName} {student.familyName} </td>
             <td> {formattedBirthDate} </td>
             <td> {student.email} </td>
-            <td> Remove {student.id} </td>
+            <td> 
+                <button onClick={() => removeRecord({serviceKey: SERVICE_KEY_STUDENTS_DELETE, id:student.id})}>Remove</button>
+            </td>
         </tr>
     )
 }
