@@ -15,9 +15,7 @@ const useSubmitForm = ({ serviceKey, form, setFormData }) => {
         if (form) {
             event.preventDefault();
 
-            const serviceData = api_access_data.find(service => service.key === serviceKey);
-
-            const uri = api_url + ":" + api_port + serviceData.path;
+            const {uri, successMessage } = getConnectionData(serviceKey);
 
             const data = Array.from(form.elements).filter((input) => input.name)
                 .reduce((obj, input) => Object.assign(obj, { [input.name]: input.value }), {});
@@ -41,7 +39,7 @@ const useSubmitForm = ({ serviceKey, form, setFormData }) => {
                         });
                 } else if (response.status === 200) {
 
-                    alert(serviceData.successMessage);
+                    alert(successMessage);
 
                     setFormData({});
                 } else {
@@ -56,4 +54,34 @@ const useSubmitForm = ({ serviceKey, form, setFormData }) => {
     return { handleSubmit };
 }
 
-export { SERVICE_KEY_STUDENTS_ADD, SERVICE_KEY_STUDENTS_LIST, useSubmitForm }
+
+const fetchAllData = ({serviceKey, setList}) => {
+
+    const {uri} = getConnectionData(serviceKey);
+
+    fetch(uri)
+        .then(response => {
+            return response.json()
+        })
+        .then(data => {
+            setList(data)
+    });
+}
+
+function getConnectionData(serviceKey) {
+
+    console.log("[USE API] Getting data to access service " + serviceKey);
+
+    const serviceAccessData = api_access_data.find(service => service.key === serviceKey);
+
+    console.log("[USE_API] PATH to be accessed in service " + serviceKey + " is " + serviceAccessData.path);
+
+    const uri = api_url + ":" + api_port + serviceAccessData.path;
+
+    console.log("[USE_API] URI to be accessed in service " + serviceKey + " is " + uri);
+
+    return { uri: uri, successMessage: serviceAccessData.successMessage };
+}
+
+
+export { SERVICE_KEY_STUDENTS_ADD, SERVICE_KEY_STUDENTS_LIST, useSubmitForm, fetchAllData }
