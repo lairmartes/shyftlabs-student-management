@@ -68,6 +68,12 @@ const fetchAllData = ({serviceKey, setList}) => {
     });
 }
 
+const removeRecord = ({serviceKey, id}) => {
+    const {uri} = getConnectionData(serviceKey);
+
+    fetch(uri + '/' + id, { method: 'DELETE'});
+}
+
 function getConnectionData(serviceKey) {
 
     console.log("[USE API] Getting data to access service " + serviceKey);
@@ -84,4 +90,4 @@ function getConnectionData(serviceKey) {
 }
 
 
-export { SERVICE_KEY_STUDENTS_ADD, SERVICE_KEY_STUDENTS_LIST, useSubmitForm, fetchAllData }
+export { SERVICE_KEY_STUDENTS_ADD, SERVICE_KEY_STUDENTS_LIST, useSubmitForm, fetchAllData, removeRecord }
