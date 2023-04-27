@@ -12,15 +12,10 @@ const api_access_data = [
 
 const useSubmitForm = ({serviceKey, form, setFormData}) => {
     
-    const [responseStatus, setResponseStatus] = useState("");
-    const [message, setMessage] = useState("");
-
     const handleSubmit = (event) => {
 
         if (form) {
             event.preventDefault();
-            setResponseStatus("loading_form");
-            setMessage("");
 
             const serviceData = api_access_data.find(service => service.key === serviceKey);
 
@@ -30,31 +25,40 @@ const useSubmitForm = ({serviceKey, form, setFormData}) => {
                             .reduce((obj, input) => Object.assign(obj, { [input.name]: input.value }),{});
 
             fetch(uri, {        
-                    method: "POST",
-                    headers: {
-                        'Content-type': 'application/json; charset=UTF-8'
-                    },
-                    body: JSON.stringify(data),
+                method: "POST",
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                },
+                body: JSON.stringify(data),
             })
             .then((response) => {
-                    if (response.status === 400) {
-                        setResponseStatus("user_error");
-                        setMessage(response.message);
+                //response. .forEach(v => console.log("header ===> " + v));
+                console.log("Response values ===> " + response);
 
-                    } else if (response.status === 200) {
-                        setResponseStatus("success");
-                        setMessage(serviceData.successMessage);
-                    } else {
-                        throw new Error(response.statusText);
-                    }
+                if (response.status === 400) {
+
+                    response.text()
+                            .then((text) => {
+                                const alertMessage = text.split(",").map(t => t.split(":").pop()).concat('\n');
+
+                                alert("User Error : " + alertMessage)
+                            });
+
+                } else if (response.status === 200) {
+                    
+                    alert(serviceData.successMessage);
+
+                    setFormData({});
+                } else {
+                    throw new Error(response.statusText);
+                }
             }).catch((err) => {
-                    setMessage(err.toString());
-                    setResponseStatus("error");
+                alert("Error: " + err.toString);
             });
         }
     }
 
-    return { handleSubmit, responseStatus, message };
+    return { handleSubmit };
 }
 
 export {SERVICE_KEY_STUDENTS_ADD, SERVICE_KEY_STUDENTS_LIST, useSubmitForm }
